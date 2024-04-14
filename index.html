@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.1/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
-
   </head>
   <body>
-    <main>
-    </main>
-    <script src="sketch.js"></script>
-  </body>
+    
+    <!-- Links to different pages -->  
+    <div class="sidebar">
+      <a href="#" onclick="changePage('times-table.html', '600', '800')">Times Table</a>
+      <a href="#" onclick="changePage('regression.html', '800', '800')">Regression</a>
+    </div>
+
+    <div class = "title">
+      <h1>Collection of small projects</h1>
+      <p>Work in progress!</p>
+    </div>
+    <!-- Embedded iframe -->
+    <div class = "project-display">
+      <iframe id="contentFrame" src="" width="100" height="100"></iframe>
+    </div>
+    
+    <script>
+    function changePage(pageUrl, width, height) {
+      document.getElementById('contentFrame').src = pageUrl;
+      document.getElementById('contentFrame').width = width;
+      document.getElementById('contentFrame').height = height;
+    }    
+    </script>
+    </body>
 </html>
