@@ -47,9 +47,11 @@ iframe {
   }
   
   div.title {
+    position: fixed;
     padding: 1px 16px;
     height: 100px;
-	  color: white;
+	  width:100%
+    color: white;
   }
   
 
