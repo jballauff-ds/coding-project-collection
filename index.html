@@ -8,6 +8,7 @@
     
     <!-- Links to different pages -->  
     <div class="sidebar">
+      <a href="#" onclick="changePage('ants.html', '550', '1000')">Ants</a>
       <a href="#" onclick="changePage('regression.html', '800', '800')">Regression</a>
       <a href="#" onclick="changePage('cube.html', '600', '700')">Cube</a>
       <a href="#" onclick="changePage('snowflake.html', '550', '600')">Snowflake</a>
@@ -25,15 +26,24 @@
     </div>
     <!-- Embedded iframe -->
     <div class = "project-display">
-      <iframe id="contentFrame" src="" width="100" height="100"></iframe>
+      <iframe id="contentFrame"></iframe>
     </div>
     
     <script>
-    function changePage(pageUrl, width, height) {
-      document.getElementById('contentFrame').src = pageUrl;
-      document.getElementById('contentFrame').width = width;
-      document.getElementById('contentFrame').height = height;
-    }    
+      window.onload = function() {
+        document.getElementById('contentFrame').width = localStorage.getItem("frameW");
+        document.getElementById('contentFrame').height = localStorage.getItem("frameH");;
+      }
+
+      function changePage(pageUrl, width, height) {
+        var frameW = width;
+        var frameH = height;
+        localStorage.setItem("frameW", frameW)
+        localStorage.setItem("frameH", frameH)
+        document.getElementById('contentFrame').src = pageUrl;
+        document.getElementById('contentFrame').width = width;
+        document.getElementById('contentFrame').height = height;
+      }    
     </script>
-    </body>
+  </body>
 </html>

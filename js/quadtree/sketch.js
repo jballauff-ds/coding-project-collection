@@ -1,8 +1,5 @@
-let button;
-
 function setup() {
   createCanvas(600, 600);
-  qt = new QuadTree(width / 2, height / 2, width / 2, height / 2, 4);
   entities = [];
   newParticles = [];
   for (let i = 0; i < 25; i++) {
@@ -32,7 +29,7 @@ The quadtree.js can be used in any other project. It can handle circular and rec
 function draw() {
   background(0);
 
-  qt = new QuadTree(width / 2, height / 2, width / 2, height / 2, 4);
+  qt = new QuadTree(0, 0, width, height, 4);
   entities = entities.concat(newParticles);
 
   for (let i = 0; i < entities.length; i++) {
