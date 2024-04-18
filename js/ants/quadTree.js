@@ -1,33 +1,38 @@
+const MAX_DEPTH = 7;
+
 class QuadTree {
   //QuadTree nw, ne, sw, se;
 
-  constructor(x, y, w, h, n) {
+  constructor(x, y, w, h, n, depth) {
     this.leaf = new QtLeaf(x, y, w, h);
     this.capacity = n;
     this.divided = false;
     this.data = [];
+
+    if (depth) {
+      this.depth = depth;
+    } else {
+      this.depth = 0;
+    }
   }
 
   insert(c) {
-    if (!intersect(this.leaf, c)) {
-      return;
-    }
+    if (!intersect(this.leaf, c)) return false;
     if (this.data.length < this.capacity) {
       this.data.push(c);
-
-      return;
-    } else {
-      if (!this.divided) {
-        this.subdivide();
-      }
-      this.nw.insert(c);
-      this.ne.insert(c);
-      this.sw.insert(c);
-      this.se.insert(c);
+      return true;
     }
+    if (this.depth == MAX_DEPTH) return false;
+    this.subdivide();
+    let testNW = this.nw.insert(c);
+    let testNE = this.ne.insert(c);
+    let testSW = this.sw.insert(c);
+    let testSE = this.se.insert(c);
+    return testNW || testNE || testSW || testSE;
   }
 
   subdivide() {
+    if (this.divided) return;
     let leafW = this.leaf.getBox().w / 2;
     let leafH = this.leaf.getBox().h / 2;
     let west = this.leaf.pos.x;
@@ -35,10 +40,38 @@ class QuadTree {
     let north = this.leaf.pos.y;
     let south = this.leaf.pos.y + leafH;
 
-    this.nw = new QuadTree(west, north, leafW, leafH, this.capacity);
-    this.ne = new QuadTree(east, north, leafW, leafH, this.capacity);
-    this.sw = new QuadTree(west, south, leafW, leafH, this.capacity);
-    this.se = new QuadTree(east, south, leafW, leafH, this.capacity);
+    this.nw = new QuadTree(
+      west,
+      north,
+      leafW,
+      leafH,
+      this.capacity,
+      this.depth + 1
+    );
+    this.ne = new QuadTree(
+      east,
+      north,
+      leafW,
+      leafH,
+      this.capacity,
+      this.depth + 1
+    );
+    this.sw = new QuadTree(
+      west,
+      south,
+      leafW,
+      leafH,
+      this.capacity,
+      this.depth + 1
+    );
+    this.se = new QuadTree(
+      east,
+      south,
+      leafW,
+      leafH,
+      this.capacity,
+      this.depth + 1
+    );
     this.divided = true;
   }
 

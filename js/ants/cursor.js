@@ -147,7 +147,6 @@ class StonePlacement extends CursorState {
     this.pos.x = mouseX;
     this.pos.y = mouseY;
     if (!this.validPosition()) {
-      console.log("invalid");
       this.cursor.state = new IllegalStonePlacement(this.cursor);
     }
   }
@@ -155,7 +154,7 @@ class StonePlacement extends CursorState {
   validPosition() {
     for (let i = 0; i < entities.length; i++) {
       let e = entities[i];
-      if (!(e instanceof Home || e instanceof Food)) continue;
+      if (e.name == "stone") continue;
       if (dist(this.pos.x, this.pos.y, e.pos.x, e.pos.y) < e.r) return false;
     }
     return true;
@@ -217,7 +216,7 @@ class StoneDrag extends CursorState {
   validPosition() {
     for (let i = 0; i < entities.length; i++) {
       let e = entities[i];
-      if (!(e instanceof Home || e instanceof Food)) continue;
+      if (e.name == "stone") continue;
       if (intersect(this, e)) {
         this.overlap = true;
         return false;
@@ -362,7 +361,7 @@ class IllegalStonePlacement extends CursorState {
   validPosition() {
     for (let i = 0; i < entities.length; i++) {
       let e = entities[i];
-      if (!(e instanceof Home || e instanceof Food)) continue;
+      if (e.name == "stone") continue;
       if (dist(this.pos.x, this.pos.y, e.pos.x, e.pos.y) < e.r) return false;
     }
     return true;
@@ -390,13 +389,13 @@ class IllegalStonePlacementDrag extends CursorState {
   }
 
   onMouseReleased() {
-    this.cursor.state = new FoodPlacement(this.cursor);
+    this.cursor.state = new StonePlacement(this.cursor);
   }
 
   validPosition() {
     for (let i = 0; i < entities.length; i++) {
       let e = entities[i];
-      if (!(e instanceof Home || e instanceof Food)) continue;
+      if (e.name == "stone") continue;
       if (intersect(this, e)) {
         return false;
       }
@@ -456,7 +455,7 @@ class Erase extends CursorState {
     this.pos.y = mouseY;
     for (let i = 0; i < entities.length; i++) {
       let e = entities[i];
-      if (!((e instanceof Food) | (e instanceof Stone))) continue;
+      if (e.name == "home") continue;
       if (intersect(this, e)) {
         this.selection.push(e);
       }

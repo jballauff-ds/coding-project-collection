@@ -1,3 +1,6 @@
+let frames = [];
+let fps = -1;
+
 const MAX_FOOD = 5;
 const MAX_STONE = 10;
 
@@ -46,7 +49,6 @@ function setup() {
     let startPosition = createVector(home_x, home_y).add(
       p5.Vector.random2D().setMag(HOME_SIZE + 2)
     );
-
     ants.push(new Ant(startPosition.x, startPosition.y, ANT_SIZE));
   }
 }
@@ -58,8 +60,8 @@ function draw() {
   for (let i = entities.length - 1; i > -1; i--) {
     let e = entities[i];
     if (!e.exists) {
-      if (e instanceof Food) foodCount--;
-      if (e instanceof Stone) stoneCount--;
+      if (e.name == "food") foodCount--;
+      if (e.name == "stone") stoneCount--;
       entities.splice(i, 1);
     }
   }
@@ -108,6 +110,21 @@ function draw() {
     entities[i].render();
   }
   cursor.render();
+
+  frames.push(frameRate());
+  if (frames.length > 30 || fps < 0) {
+    let sum = 0;
+    for (let i = 0; i < frames.length; i++) {
+      sum += frames[i];
+    }
+    fps = sum / frames.length;
+    frames = [];
+  }
+  textSize(16);
+  noStroke(255);
+  fill(255);
+  textAlign(LEFT, BOTTOM);
+  text("FPS: " + floor(fps), 10, 20);
 }
 
 function checkEntityCollisions(a, e) {
@@ -127,14 +144,8 @@ function updatePher(pher, qt) {
   for (let i = pher.length - 1; i > -1; i--) {
     let p = pher[i];
     p.update();
-    if (p.lifetime > PHER_LIFE_FRAMES) {
-      pher.splice(i, 1);
-    }
-    if (showTrail) p.render();
-  }
-
-  for (let i = 0; i < pher.length; i++) {
-    qt.insert(pher[i]);
+    if (p.lifetime > PHER_LIFE_FRAMES || !qt.insert(pher[i])) pher.splice(i, 1);
+    else if (showTrail) p.render();
   }
 }
 
@@ -148,8 +159,8 @@ function checkPriority(ant) {
       }
       if (intersect(sensor, e)) {
         if (
-          (ant.carryFood && e instanceof Home) |
-          (!ant.carryFood && e instanceof Food)
+          (ant.carryFood && e.name == "home") |
+          (!ant.carryFood && e.name == "food")
         ) {
           ant.priority = e.pos;
           return;
